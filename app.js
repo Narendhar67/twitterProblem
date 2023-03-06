@@ -48,3 +48,30 @@ app.post("/register/", async (request, response) => {
     }
   }
 });
+
+// API-2 login
+
+app.post("/login/", async (request, response) => {
+  const { username, password } = request.body;
+  const UsernameCheckQuery = `SELECT * FROM user WHERE username = '${username}';`;
+  const UserDetails = await db.get(UsernameCheckQuery);
+
+  let jwtToken;
+  const payload = { username };
+  if (UserDetails === undefined) {
+    response.status(400);
+    response.send("Invalid user");
+  } else {
+    const isPasswordMatched = await bcrypt.compare(
+      password,
+      UserDetails.password
+    );
+    if (isPasswordMatched) {
+      jwtToken = await jwt.sign(payload, "97000");
+      response.send({ jwtToken });
+    } else {
+      response.status(400);
+      response.send("Invalid password");
+    }
+  }
+});
