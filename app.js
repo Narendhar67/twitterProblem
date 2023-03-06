@@ -123,3 +123,23 @@ app.get("/user/tweets/feed/", authenticate, async (request, response) => {
   const result = dbRes.map(getTweet);
   response.send(result);
 });
+
+// API-4 user following userNames
+
+app.get("/user/following/", authenticate, async (request, response) => {
+  const { username, user_id } = request.user;
+  const Query = `SELECT username AS name FROM follower INNER JOIN user 
+    ON following_user_id = user_id WHERE follower_user_id = ${user_id};`;
+  const dbRes = await db.all(Query);
+  response.send(dbRes);
+});
+
+// API-5 user followers userNames
+
+app.get("/user/followers/", authenticate, async (request, response) => {
+  const { username, user_id } = request.user;
+  const Query = `SELECT username AS name FROM follower INNER JOIN user 
+    ON following_user_id = user_id WHERE follower_user_id = ${user_id};`;
+  const dbRes = await db.all(Query);
+  response.send(dbRes);
+});
