@@ -25,3 +25,26 @@ const InitializeDBAndServer = async () => {
 };
 
 InitializeDBAndServer();
+
+// API-1 Register User
+
+app.post("/register/", async (request, response) => {
+  const { username, password, name, gender } = request.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const UsernameCheckQuery = `SELECT * FROM user WHERE username = '${username}';`;
+  const dbResponse = await db.get(UsernameCheckQuery);
+  if (dbResponse !== undefined) {
+    response.status(400);
+    response.send("User already exists");
+  } else {
+    if (password.length < 6) {
+      response.status(400);
+      response.send("Password is too short");
+    } else {
+      const CreateUserUserQuery = `INSERT INTO user(username , password , name , gender) 
+            VALUES('${username}','${hashedPassword}','${name}','${gender}');`;
+      await db.run(CreateUserUserQuery);
+      response.send("User created successfully");
+    }
+  }
+});
