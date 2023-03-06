@@ -26,6 +26,30 @@ const InitializeDBAndServer = async () => {
 
 InitializeDBAndServer();
 
+// Authentication => verifying jwtToken
+// middleWare function
+
+const authenticate = async (request, response, next) => {
+  const authHeader = request.headers["authorization"];
+  let jwtToken;
+  if (authHeader === undefined) {
+    response.status(401);
+    response.send("Invalid JWT Token");
+  } else {
+    jwtToken = authHeader.split(" ")[1];
+
+    jwt.verify(jwtToken, "97000", async (error, payload) => {
+      if (error) {
+        response.status(401);
+        response.send("Invalid JWT Token");
+      } else {
+        request.user = payload;
+        next();
+      }
+    });
+  }
+};
+
 // API-1 Register User
 
 app.post("/register/", async (request, response) => {
@@ -57,7 +81,7 @@ app.post("/login/", async (request, response) => {
   const UserDetails = await db.get(UsernameCheckQuery);
 
   let jwtToken;
-  const payload = { username };
+
   if (UserDetails === undefined) {
     response.status(400);
     response.send("Invalid user");
@@ -66,6 +90,8 @@ app.post("/login/", async (request, response) => {
       password,
       UserDetails.password
     );
+    const user_id = UserDetails.user_id;
+    const payload = { username, user_id };
     if (isPasswordMatched) {
       jwtToken = await jwt.sign(payload, "97000");
       response.send({ jwtToken });
@@ -74,4 +100,26 @@ app.post("/login/", async (request, response) => {
       response.send("Invalid password");
     }
   }
+});
+
+// API-3 Return the Latest 4 tweets
+
+app.get("/user/tweets/feed/", authenticate, async (request, response) => {
+  const { username, user_id } = request.user;
+  const Query = `SELECT tweet , date_time as dateTime 
+  FROM 
+  follower INNER JOIN tweet ON following_user_id = user_id
+  WHERE user_id = ${user_id}
+  ORDER BY dateTime
+  LIMIT 4;`;
+  const dbRes = await db.all(Query);
+  function getTweet(obj) {
+    return {
+      username: username,
+      tweet: obj.tweet,
+      dateTime: obj.dateTime,
+    };
+  }
+  const result = dbRes.map(getTweet);
+  response.send(result);
 });
