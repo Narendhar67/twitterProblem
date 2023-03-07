@@ -139,7 +139,50 @@ app.get("/user/following/", authenticate, async (request, response) => {
 app.get("/user/followers/", authenticate, async (request, response) => {
   const { username, user_id } = request.user;
   const Query = `SELECT username AS name FROM follower INNER JOIN user 
-    ON following_user_id = user_id WHERE follower_user_id = ${user_id};`;
+    ON follower_user_id = user_id WHERE following_user_id = ${user_id};`;
   const dbRes = await db.all(Query);
   response.send(dbRes);
+});
+
+// API-6  request a specific tweet
+
+app.get("/tweets/:tweetId/", authenticate, async (request, response) => {
+  const { username, user_id } = request.user;
+  const { tweetId } = request.params;
+  const tweetQuery = `SELECT 
+  
+  tweet,
+  count(like_id) AS likes,
+  count(reply_id) AS replies,
+  date_time AS dateTime
+  FROM 
+  (tweet INNER JOIN reply ON tweet.tweet_id = reply.tweet_id) AS T
+  INNER JOIN like ON T.tweet_id = like.tweet_id
+  WHERE 
+  T.tweet_id = ${tweetId} 
+  AND 
+  tweet.user_id IN (SELECT user_id 
+                    FROM 
+                    follower INNER JOIN user 
+                    ON following_user_id = user_id 
+                    WHERE follower_user_id = ${user_id})
+  ;`;
+  const Tweet = await db.get(tweetQuery);
+
+  //   const followingUsers = `SELECT user_id FROM follower INNER JOIN user
+  //     ON following_user_id = user_id WHERE follower_user_id = ${user_id};`;
+  //   const followingUserIds = await db.all(followingUsers);
+  //   console.log(followingUserIds);
+  //   UserIdList = [];
+  //   for (let OBJ of followingUserIds) {
+  //     UserIdList.push(OBJ.user_id);
+  //   }
+  //   UserIdList.includes(Tweet.user_id)
+
+  if (Tweet.tweet !== null) {
+    response.send(Tweet);
+  } else {
+    response.status(401);
+    response.send("Invalid Request");
+  }
 });
