@@ -30,6 +30,29 @@ GET http://localhost:3000/user/followers/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvZUJpZGVuIiwidXNlcl9pZCI6MiwiaWF0IjoxNjc4MTI2NjI1fQ.6LDOAksLkWbd4_MnwlnXa9tMM6GMb0DucUV2aGYCchM
 ###
 
-GET http://localhost:3000/tweets/3/
+GET http://localhost:3000/tweets/1/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvZUJpZGVuIiwidXNlcl9pZCI6MiwiaWF0IjoxNjc4MTc0NTM3fQ.UphoKIoeM86IqJsK9uU5At3JE0C1WvVMcXZC2XO5BOw
+###
+
+GET http://localhost:3000/tweets/1/likes/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvZUJpZGVuIiwidXNlcl9pZCI6MiwiaWF0IjoxNjc4MTc0NTM3fQ.UphoKIoeM86IqJsK9uU5At3JE0C1WvVMcXZC2XO5BOw
+###
+
+GET http://localhost:3000/tweets/1/replies/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvZUJpZGVuIiwidXNlcl9pZCI6MiwiaWF0IjoxNjc4MTc0NTM3fQ.UphoKIoeM86IqJsK9uU5At3JE0C1WvVMcXZC2XO5BOw
+###
+
+GET http://localhost:3000/user/tweets/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvZUJpZGVuIiwidXNlcl9pZCI6MiwiaWF0IjoxNjc4MTI2NjI1fQ.6LDOAksLkWbd4_MnwlnXa9tMM6GMb0DucUV2aGYCchM
+###
+
+POST http://localhost:3000/user/tweets/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvZUJpZGVuIiwidXNlcl9pZCI6MiwiaWF0IjoxNjc4MTI2NjI1fQ.6LDOAksLkWbd4_MnwlnXa9tMM6GMb0DucUV2aGYCchM
+
+
+{
+    "tweet": "This is my Second tweet"
+}
+
 ###
