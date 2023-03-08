@@ -30,7 +30,7 @@ GET http://localhost:3000/user/followers/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvZUJpZGVuIiwidXNlcl9pZCI6MiwiaWF0IjoxNjc4MTI2NjI1fQ.6LDOAksLkWbd4_MnwlnXa9tMM6GMb0DucUV2aGYCchM
 ###
 
-GET http://localhost:3000/tweets/1/
+GET http://localhost:3000/tweets/8/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvZUJpZGVuIiwidXNlcl9pZCI6MiwiaWF0IjoxNjc4MTc0NTM3fQ.UphoKIoeM86IqJsK9uU5At3JE0C1WvVMcXZC2XO5BOw
 ###
 

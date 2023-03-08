@@ -170,8 +170,8 @@ app.get(
 
     const tweetQuery = `SELECT 
   tweet,
-  count(like_id) AS likes,
-  count(reply_id) AS replies,
+  count(DISTINCT like_id) AS likes,
+  count(DISTINCT reply_id) AS replies,
   date_time AS dateTime
   FROM 
   (tweet LEFT JOIN reply ON tweet.tweet_id = reply.tweet_id) AS T
@@ -234,14 +234,14 @@ app.get("/user/tweets/", authenticate, async (request, response) => {
   const { username, user_id } = request.user;
   const getAllTweets = `SELECT 
     tweet,
-    count(like_id) AS likes,
-    count(reply_id) AS replies,
+    count(DISTINCT like_id) AS likes,
+    count(DISTINCT reply_id) AS replies,
     tweet.date_time AS dateTime
     FROM
     (tweet LEFT JOIN reply ON tweet.tweet_id = reply.tweet_id) AS T
     LEFT JOIN like ON tweet.tweet_id = like.tweet_id
-    GROUP BY tweet.tweet_id
-    ORDER BY dateTime DESC;`;
+    WHERE tweet.user_id = ${user_id}
+    GROUP BY tweet.tweet_id;`;
   const result = await db.all(getAllTweets);
   response.send(result);
 });
